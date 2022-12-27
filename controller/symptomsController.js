@@ -1,13 +1,10 @@
+const { default: axios } = require("axios");
 const {
   symptomsData,
   DiagonsisData,
   getSymptomsData,
 } = require("../service/symptomsData.service");
-
-const { age } = require("../service/age.service");
-const { gender } = require("../service/Gender.service");
 const userInfo = require("../service/userDetails");
-
 
 const SymptomStore = async (req, res) => {
   // console.log(req.body.userId);
@@ -69,46 +66,43 @@ const SymptomStore = async (req, res) => {
 const diagonsis = async (arr, sex, age) => {
   let response = await DiagonsisData(arr, sex, age);
   if (response) {
-    console.log("=2=2=2=2=2=2=2=2==2=2=2=2==22=", response.data);
-
-    return response.data;
+      return response.data;
   } else {
     console.log("no response ----------");
   }
   // console.log(response.data);
 };
+
+let timeout;
+
+// const debouncedGetDefaultSymptoms = async (req, res) => {
+//   clearTimeout(timeout);
+//   timeout = setTimeout(() => getDefaultSymptoms(req, res), 3000);
+// }
+
 const getDefaultSymptoms = async (req, res) => {
-  console.log(
-    req.body.userId,
-    "____________________________________________________________________"
+  
+  let Userdata = await userInfo.data(req.query.userId);
+
+  let temp = [];
+
+  const response = await getSymptomsData(
+    "https://api.infermedica.com/v3/symptoms",
+    Userdata.age,
+    
   );
 
-  let Userdata = await userInfo.data(req.body.userId);
-  // console.log(req.query.symptoms)
-  if (Userdata) {
-    let temp = ["diabetes"];
-    // const response = await getSymptomsData(Userdata.age, Userdata.Gender);
-
-    // console.log(response.data[0].name);
-    // temp.push(...response.data)
-    // for (let i = 0; i <2; i++) {
-    //   temp.push(response.data[i].name);
-    //   // temp.push("hello world")
-    // }
-    console.log(temp);
-
-    return res.status(200).json({
-      // data: response.data.map((item) => item.name),
-      data: temp,
-      message: "Successfully Got all the names",
-      success: true,
-    });
-  } else {
-    return res.status(404).json({
-      message: "Please Give userId Although Please",
-      success: false,
-    });
+  for (let i = 0; i < response.length; i++) {
+    temp.push(response[i].name);
   }
+
+  // console.log(temp);
+  return res.status(200).json({
+    // data: response.data.map((item) => item.name),
+    data: temp,
+    message: "Successfully Got all the names",
+    success: true,
+  });
 };
 
 // getSymptomsController

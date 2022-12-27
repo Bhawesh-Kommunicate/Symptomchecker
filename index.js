@@ -1,9 +1,11 @@
 const express = require("express");
 const bodyParser = require("body-parser");
+const cors = require("cors")
 const app = express();
 const { getSymptoms } = require("./routes/symptoms.route");
 const { age } = require("./routes/age.route");
 const { Gender } = require("./routes/sex.route");
+app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 let port = 5008;
