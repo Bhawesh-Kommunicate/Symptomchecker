@@ -53,8 +53,8 @@ const getDefaultSymptoms = async (req, res) => {
     temp.push({
       "searchKey":response[i].name,
       "message" :response[i].name,
-      "metadata": {
-        "KM_TRIGGER_EVENT": "symptoms"
+      metadata: {
+        KM_TRIGGER_EVENT: "symptoms"
     }
     })
   }
