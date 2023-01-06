@@ -53,13 +53,13 @@ const getDefaultSymptoms = async (req, res) => {
     temp.push({
       "searchKey":response[i].name,
       "message" :response[i].name,
-      "metadata": {
+      // "metadata": {
         "KM_TRIGGER_EVENT": "symptoms"
-    }
+    // }
     })
   }
   // console.log()
-  console.log(temp, "temptemptemptemptemptemptemp");
+  // console.log(temp, "temptemptemptemptemptemptemp");
   return res.status(200).json({
     // data: response.data.map((item) => item.name),
     data: temp,
