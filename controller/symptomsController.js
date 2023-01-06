@@ -52,9 +52,8 @@ const getDefaultSymptoms = async (req, res) => {
    
     temp.push({
       "searchKey":response[i].name,
-      "name" :response[i].name,
-      
-      "metadata":{
+      "message" :response[i].name,
+       "metadata":{
         "random" : "1",
         "replyMetadata": {
        "KM_TRIGGER_EVENT" : "symptoms"
