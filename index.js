@@ -5,17 +5,26 @@ const app = express();
 const { getSymptoms } = require("./routes/symptoms.route");
 const { age } = require("./routes/age.route");
 const { Gender } = require("./routes/sex.route");
+const { diagonsis } = require("./routes/dignosis.routes");
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-let port = 5008;
+let port = 8080;
 Gender(app)
 age(app)
+diagonsis(app)
 getSymptoms(app);
+app.get("/" , (req,res)=>{
+  console.log("hello world!")
+  res.json({
+    message : "Sussessfull" ,
+    data : ["lodon", "paris"]
+  })
+})
 app.listen(port, () => {
   console.log("app is listening over port=", port);
 });
-const axios = require("axios");
+
 
 
 // async function res(input, output) {

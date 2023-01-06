@@ -1,102 +1,68 @@
 const { default: axios } = require("axios");
-const {
-  symptomsData,
-  DiagonsisData,
-  getSymptomsData,
-} = require("../service/symptomsData.service");
+// const { token } = require("../service/interviewToken.service");
+const {getSymptomsData} = require("../service/symptomsData.service");
+const SymptomService = require("../service/symptomStore.service");
 const userInfo = require("../service/userDetails");
 
 const SymptomStore = async (req, res) => {
-  // console.log(req.body.userId);
-
-  var Userdata = await userInfo.data(req.body.userId);
-
-  console.log(
-    Userdata,
-    "UserdataUserdataUserdataUserdataUserdataUserdataUserdataUserdataUserdataUserdata"
-  );
-
-  let data = await symptomsData(req.body.symptoms, CheckObj.age);
-  if (!CheckObj.symptoms.includes(data.data.mentions[0].id) && CheckObj.age) {
-    if (CheckObj.symptoms.length > 2) {
-      CheckObj.symptoms.shift();
-      CheckObj.symptoms.push(data.data.mentions[0].id);
-    } else if (CheckObj.age) {
-      console.log(data.data.mentions[0]);
-      CheckObj.symptoms.push({
-        id: data.data.mentions[0].id,
-        choice_id: data.data.mentions[0].choice_id,
-      });
-
-      console.log(CheckObj);
+  console.log(req.query.userId);
+  console.log(req.query.symptoms);
+  var Userdata = await userInfo.data(req.query.userId);
+console.log(Userdata.Gender)
+  let data = await SymptomService.symptomsData(req.query.symptoms, Userdata.age);
+// console.log(data.data.mentions[0].id)
+const response = await SymptomService.symptomsDiagonsis("token",Userdata.age,Userdata.Gender,data.data.mentions[0].id)
+  if(response && response.data.question.items.length > 0){
+    const names = []
+    for(let  i = 0 ; i <response.data.question.items.length ;i++ ){
+      names.push({
+        "title": `${response.data.question.items[i].name}`,
+        "message": `${response.data.question.items[i].name}`,
+        "replyMetadata": {
+         "id" : `${response.data.question.items[i].id}`,
+         "KM_TRIGGER_EVENT" : "Default Fallback"
+      }
+      }
+      )
     }
-  }
-
-  // console.log(CheckObj.age)
-  if (CheckObj.symptoms.length >= 3) {
-    var { question } = await diagonsis(
-      CheckObj.symptoms,
-      CheckObj.sex,
-      CheckObj.age
-    );
-    //  console.log(question.text , "QQQQQQQQQQQQQQQQQQQQQq")
-  }
-  let symptomsSize = CheckObj.symptoms.length;
-
-  // let ans = CheckObj.symptoms.join(" and ");
-
-  if (question) {
-    return res.status(200).json({
-      message: "Successflly Added the symptoms",
-      success: true,
-      // data: ans,
-      data: [question.text, question.items],
-      len: symptomsSize,
+  
+  res.status(200).json({
+    message: "Successfull",
+    success: true,
+    items : names,
+    data: response.data.question,
     });
-  } else {
-    return res.status(201).json({
-      message: "Not Getting Any value",
-      success: false,
-      len: symptomsSize,
-    });
-  }
+  }// console.log(CheckObj);
 };
-// }
-
-const diagonsis = async (arr, sex, age) => {
-  let response = await DiagonsisData(arr, sex, age);
-  if (response) {
-      return response.data;
-  } else {
-    console.log("no response ----------");
-  }
-  // console.log(response.data);
-};
-
-let timeout;
-
-// const debouncedGetDefaultSymptoms = async (req, res) => {
-//   clearTimeout(timeout);
-//   timeout = setTimeout(() => getDefaultSymptoms(req, res), 3000);
-// }
 
 const getDefaultSymptoms = async (req, res) => {
-  
   let Userdata = await userInfo.data(req.query.userId);
 
   let temp = [];
 
   const response = await getSymptomsData(
     "https://api.infermedica.com/v3/symptoms",
-    Userdata.age,
-    
+    Userdata.age
   );
 
   for (let i = 0; i < response.length; i++) {
-    temp.push(response[i].name);
-  }
 
-  // console.log(temp);
+    // here temp got changed so please go through if its not going to work
+    // temp.push(response[i].name);
+   
+    temp.push({
+      "searchKey":response[i].name,
+      "name" :response[i].name,
+      
+      "metadata":{
+        "random" : "1",
+        "replyMetadata": {
+       "KM_TRIGGER_EVENT" : "symptoms"
+    }}
+    })
+  }
+  // console.log()
+  console.log(temp, "temptemptemptemptemptemptemp");
   return res.status(200).json({
     // data: response.data.map((item) => item.name),
     data: temp,
