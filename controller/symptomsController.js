@@ -54,7 +54,7 @@ const getDefaultSymptoms = async (req, res) => {
       "searchKey":response[i].name,
       "message" :response[i].name,
       "metadata": {
-        "KM_TRIGGER_EVENT": "symtoms"
+        "KM_TRIGGER_EVENT": "symptoms"
     }
     })
   }
