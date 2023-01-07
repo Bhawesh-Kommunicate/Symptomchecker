@@ -1,3 +1,4 @@
+const { specialist } = require("../service/specialist.service");
 const { symptomsDiagonsis, symptomsData } = require("../service/symptomStore.service");
 const { data } = require("../service/userDetails")
 
@@ -16,9 +17,13 @@ console.log(req.query.s_id)
             data: response.data.conditions[0].common_name,
             });
         }else{
+
+          const ans = await specialist(UserData.age , req.query.s_id , UserData.Gender)
+
          return res.  status(200).json({
             message :"Sorry, I couldn't diagnose based on the provided symptoms. Please visit the nearest doctor for further diagnosis",
-            success : true
+            success : true,
+            data : ans
           })
         }
 }
