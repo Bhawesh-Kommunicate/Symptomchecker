@@ -55,7 +55,9 @@ const getDefaultSymptoms = async (req, res) => {
       "message" :response[i].name,
       "metadata": {
         "replyMetadata": {
-        "KM_TRIGGER_EVENT": "symptoms"
+          "KM_CHAT_CONTEXT": {
+            "buttonClicked": true
+        }
         }
     }
     })
