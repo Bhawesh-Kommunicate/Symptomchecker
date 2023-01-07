@@ -1,6 +1,6 @@
 const { default: axios } = require("axios");
 // const { token } = require("../service/interviewToken.service");
-const {getSymptomsData} = require("../service/symptomsData.service");
+const { getSymptomsData } = require("../service/symptomsData.service");
 const SymptomService = require("../service/symptomStore.service");
 const userInfo = require("../service/userDetails");
 
@@ -8,35 +8,46 @@ const SymptomStore = async (req, res) => {
   console.log(req.query.userId);
   console.log(req.query.symptoms);
   var Userdata = await userInfo.data(req.query.userId);
-console.log(Userdata.Gender)
-  let data = await SymptomService.symptomsData(req.query.symptoms, Userdata.age);
-// console.log(data.data.mentions[0].id)
-const response = await SymptomService.symptomsDiagonsis("token",Userdata.age,Userdata.Gender,data.data.mentions[0].id)
-  if(response && response.data.question.items.length > 0){
-    const names = []
-    for(let  i = 0 ; i <response.data.question.items.length ;i++ ){
+  console.log(Userdata.Gender);
+  let data = await SymptomService.symptomsData(
+    req.query.symptoms,
+    Userdata.age
+  );
+  // console.log(data.data.mentions[0].id)
+  const response = await SymptomService.symptomsDiagonsis(
+    "token",
+    Userdata.age,
+    Userdata.Gender,
+    data.data.mentions[0].id
+  );
+  if (response && response.data.question.items.length > 0) {
+    const names = [];
+    for (let i = 0; i < response.data.question.items.length; i++) {
       names.push({
-        "title": `${response.data.question.items[i].name}`,
-        "message": `${response.data.question.items[i].name}`,
-        "replyMetadata": {
-         "id" : `${response.data.question.items[i].id}`,
-         "KM_TRIGGER_EVENT" : "Default Fallback"
-      }
-      }
-      )
+        title: `${response.data.question.items[i].name}`,
+        message: `${response.data.question.items[i].name}`,
+        replyMetadata: {
+          id: `${response.data.question.items[i].id}`,
+          KM_TRIGGER_EVENT: "Default Fallback",
+        },
+      });
     }
-  
-  res.status(200).json({
-    message: "Successfull",
-    success: true,
-    items : names,
-    data: response.data.question,
+
+    res.status(200).json({
+      message: "Successfull",
+      success: true,
+      items: names,
+      data: response.data.question,
     });
-  }// console.log(CheckObj);
+  } // console.log(CheckObj);
 };
 
 const getDefaultSymptoms = async (req, res) => {
   let Userdata = await userInfo.data(req.query.userId);
+  function myAge(item) {
+    var matches = item.match(/(\d+)/);
+    return matches;
+  }
 
   let temp = [];
 
@@ -44,24 +55,11 @@ const getDefaultSymptoms = async (req, res) => {
     "https://api.infermedica.com/v3/symptoms",
     Userdata.age
   );
-
   for (let i = 0; i < response.length; i++) {
-
-    // here temp got changed so please go through if its not going to work
-    // temp.push(response[i].name);
-   
-    temp.push({
-      "searchKey":response[i].name,
-      "message" :response[i].name,
-      "metadata": {
-        "replyMetadata": {
-        "KM_TRIGGER_EVENT": "symptoms"
-        }
+    if(!myAge(response[i].name) == true){
+            temp.push(response[i].name);
     }
-    })
   }
-  // console.log()
-  // console.log(temp, "temptemptemptemptemptemptemp");
   return res.status(200).json({
     // data: response.data.map((item) => item.name),
     data: temp,
