@@ -45,21 +45,15 @@ const getDefaultSymptoms = async (req, res) => {
     Userdata.age
   );
 
-  for (let i = 0; i < response.length; i++) {
+
 
     // here temp got changed so please go through if its not going to work
     // temp.push(response[i].name);
    
-    temp.push({
-      "searchKey":response[i].name,
-      "message" :response[i].name,
-      "metadata": {
-        "replyMetadata": {
-        "KM_TRIGGER_EVENT": "symptoms"
-        }
+    for (let i = 0; i < response.length; i++) {
+      temp.push(response[i].name);
     }
-    })
-  }
+
   // console.log()
   // console.log(temp, "temptemptemptemptemptemptemp");
   return res.status(200).json({
