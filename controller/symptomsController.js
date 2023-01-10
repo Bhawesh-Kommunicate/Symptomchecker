@@ -185,15 +185,15 @@ const getDefaultSymptoms = async (req, res) => {
 
   for (let i = 0; i < response.length; i++) {
     // here temp got changed so please go through if its not going to work
-    // temp.push(response[i].name);
-    temp.push({
-      searchKey: response[i].name,
-      name: response[i].name,
-      metadata: {
-        KM_TRIGGER_EVENT: "symptoms",
-      },
-    });
-  }
+    temp.push(response[i].name);
+  //   temp.push({
+  //     searchKey: response[i].name,
+  //     name: response[i].name,
+  //     metadata: {
+  //       KM_TRIGGER_EVENT: "symptoms",
+  //     },
+  //   });
+  // }
 
   // console.log(temp);
   return res.status(200).json({
