@@ -193,7 +193,7 @@ const getDefaultSymptoms = async (req, res) => {
   //       KM_TRIGGER_EVENT: "symptoms",
   //     },
   //   });
-  // }
+  }
 
   // console.log(temp);
   return res.status(200).json({
