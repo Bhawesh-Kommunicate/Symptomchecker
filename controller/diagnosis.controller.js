@@ -5,7 +5,6 @@ const { data } = require("../service/userDetails")
 const diagonsischecker = async(req,res) =>{
 const UserData = await data(req.query.userId);
 console.log(req.query.s_id)
-console.log(req.query.s_id)
     const response = await symptomsDiagonsis(UserData.token,UserData.age , UserData.Gender ,req.query.s_id )
         if(response.data.conditions[0] != null){
           console.log(response.data.conditions[0])
