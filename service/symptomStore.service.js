@@ -2,7 +2,6 @@ var axios = require("axios");
 require("dotenv").config();
 const storeSymptom = async (userId, symptoms) => {
     console.log(userId)
-    temp = []
   var data = JSON.stringify({
     metadata: {
       "symptoms": `${symptoms}`,
@@ -61,17 +60,23 @@ const symptomsData = async(text , age)=>{
 
 const symptomsDiagonsis = async(token,age,Gender,id)=>{
 // we have to add multiple evidence although also as by making array and putting that into evidence || or puting answer in present format
+
+
+let evidanceArr = []
+for(let i = 0 ; i < id.length ; i++ ){
+  evidanceArr.push({
+    "id": `${id[i]}`,
+      "choice_id": "present",
+      "source" : "initial"
+  })
+}
+
 var data = JSON.stringify({
   sex: `${Gender}`,
   age: {
     value: Number(age)
   },
-  evidence: [
-    {
-      "id": `${id}`,
-      "choice_id": "present"
-    }
-  ]
+  evidence: evidanceArr
 });
 
 var config = {

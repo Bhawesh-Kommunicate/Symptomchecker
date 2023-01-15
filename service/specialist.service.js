@@ -32,8 +32,8 @@ const specialist = async (age,symptoms,Gender)=>{
       
      const response = await axios(config)
 
-      let ans = "We recommand you to reach " + response.data.recommended_specialist.name
-      return ans
+       return "We recommand you to reach " + response.data.recommended_specialist.name
+    //   return ans
 }
 
 // specialist("43" , "sp_1" , "male");
